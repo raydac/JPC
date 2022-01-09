@@ -1,17 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>sourceforge.net</groupId>
-    <artifactId>jpc</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>sourceforge.net</groupId>
+  <artifactId>jpc</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
 
+  <profiles>
+    <profile>
+      <id>debugger</id>
+      <build>
+        <finalName>JPCDebugger</finalName>
+      </build>
+      <properties>
+        <manifest.name>JPC Debugger</manifest.name>
+        <manifest.main.class>org.jpc.debugger.JPC</manifest.main.class>
+        <manifest.default.args>-fda mem:resources/images/floppy.img -hda mem:resources/images/dosgames.img -boot fda
+        </manifest.default.args>
+        <manifest.class.path>.</manifest.class.path>
+      </properties>
+    </profile>
+    <profile>
+      <id>tools</id>
+      <build>
+        <finalName>Tools</finalName>
+      </build>
+      <properties>
+        <manifest.name>JPC Tools</manifest.name>
+        <manifest.main.class>tools.Tools</manifest.main.class>
+        <manifest.class.path>.</manifest.class.path>
+      </properties>
+    </profile>
+    <profile>
+      <id>tests</id>
+      <build>
+        <finalName>TestGen</finalName>
+      </build>
+      <properties>
+        <manifest.name>JPC Tools</manifest.name>
+        <manifest.main.class>tools.TestGenerator</manifest.main.class>
+        <manifest.class.path>Tools.jar:.</manifest.class.path>
+        <manifest.class.path>.</manifest.class.path>
+      </properties>
+    </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <finalName>JPCApplication</finalName>
+      </build>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <manifest.name>JPC Application</manifest.name>
+        <manifest.main.class>org.jpc.j2se.JPCApplication</manifest.main.class>
+        <manifest.default.args>-fda mem:resources/images/floppy.img -hda mem:resources/images/dosgames.img -boot fda
+        </manifest.default.args>
+        <manifest.class.path>.</manifest.class.path>
+      </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Name>${manifest.name}</Name>
+              <Author>Ian Preston</Author>
+              <Main-Class>${manifest.main.class}</Main-Class>
+              <Default-Args>${manifest.default.args}</Default-Args>
+              <Class-Path>${manifest.class.path}</Class-Path>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
